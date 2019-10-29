@@ -56,7 +56,11 @@ public class IdentityEventUtilsTest extends IdentityBaseTest {
     public void testReadMessageTemplate() throws IOException {
 
         String identityEventUtils = IdentityEventUtils.readMessageTemplate("src/test/resources/sample-file.xml");
+        String osName = System.getProperty("os.name").toLowerCase();
         String fileContent = "<file></file>\n";
+        if(osName.contains("windows")){
+            fileContent = "<file></file>\r\n";
+        }
         Assert.assertTrue(fileContent.equals(identityEventUtils));
     }
 
