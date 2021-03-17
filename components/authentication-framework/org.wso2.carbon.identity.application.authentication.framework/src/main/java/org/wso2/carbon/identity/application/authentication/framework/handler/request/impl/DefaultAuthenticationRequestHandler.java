@@ -52,7 +52,6 @@ import org.wso2.carbon.identity.application.authentication.framework.util.Framew
 import org.wso2.carbon.identity.application.authentication.framework.util.LoginContextManagementUtil;
 import org.wso2.carbon.identity.application.authentication.framework.util.SessionMgtConstants;
 import org.wso2.carbon.identity.base.IdentityConstants;
-import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.idp.mgt.util.IdPManagementUtil;
@@ -925,7 +924,7 @@ public class DefaultAuthenticationRequestHandler implements AuthenticationReques
     private void setAuthenticatedIDPByApps(SessionContext sessionContext, String applicationName) {
 
         if (log.isDebugEnabled()) {
-            log.debug("Getting shared authenticatedIdpData from session context and setting it for"
+            log.debug("Getting shared authenticatedIdpData from session context and setting it for "
                     + "application: " + applicationName);
         }
         Map<String, AuthenticatedIdPData> authenticatedIdPDataMap = new HashMap<>();
@@ -940,6 +939,12 @@ public class DefaultAuthenticationRequestHandler implements AuthenticationReques
             }
             authenticatedIdPDataMap.put(authenticatedIdPData.getIdpName(), authenticatedIdPData);
         }
-        sessionContext.getAuthenticatedIdPsPerApp().put(applicationName, authenticatedIdPDataMap);
+        // To handle the sso gracefully when there is already an existing session.
+        if (sessionContext.getAuthenticatedIdPsOfApp() == null) {
+            Map<String, Map<String, AuthenticatedIdPData>> authenticatedIdpOfApp = new HashMap<>();
+            authenticatedIdpOfApp.put(applicationName, authenticatedIdPDataMap);
+            sessionContext.setAuthenticatedIdPsOfApp(authenticatedIdpOfApp);
+        }
+        sessionContext.getAuthenticatedIdPsOfApp().put(applicationName, authenticatedIdPDataMap);
     }
 }

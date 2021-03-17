@@ -34,7 +34,8 @@ public class SessionContext implements Serializable {
     private boolean isRememberMe = false;
     private Map<String,Object> properties = new HashMap<>();
     private SessionAuthHistory sessionAuthHistory = new SessionAuthHistory();
-    private Map<String, Map<String, AuthenticatedIdPData>> authenticatedIdPsPerApp = new HashMap<>();
+    // This authenticatedIdPsOfApp has the mapping of application and the map of authenticated IDPs.
+    private Map<String, Map<String, AuthenticatedIdPData>> authenticatedIdPsOfApp = new HashMap<>();
 
     public Map<String, SequenceConfig> getAuthenticatedSequences() {
         return authenticatedSequences;
@@ -54,14 +55,14 @@ public class SessionContext implements Serializable {
         this.authenticatedIdPs = authenticatedIdPs;
     }
 
-    public void setAuthenticatedIdPsPerApp(Map<String, Map<String, AuthenticatedIdPData>> authenticatedIdPsPerApp) {
+    public void setAuthenticatedIdPsOfApp(Map<String, Map<String, AuthenticatedIdPData>> authenticatedIdPsOfApp) {
 
-        this.authenticatedIdPsPerApp = authenticatedIdPsPerApp;
+        this.authenticatedIdPsOfApp = authenticatedIdPsOfApp;
     }
 
-    public Map<String, Map<String, AuthenticatedIdPData>> getAuthenticatedIdPsPerApp() {
+    public Map<String, Map<String, AuthenticatedIdPData>> getAuthenticatedIdPsOfApp() {
 
-        return authenticatedIdPsPerApp;
+        return authenticatedIdPsOfApp;
     }
 
     public boolean isRememberMe() {
