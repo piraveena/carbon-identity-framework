@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.identity.claim.metadata.mgt.util;
 
+import org.apache.log4j.MDC;
 import org.wso2.carbon.identity.claim.metadata.mgt.dto.AttributeMappingDTO;
 import org.wso2.carbon.identity.claim.metadata.mgt.dto.ClaimDialectDTO;
 import org.wso2.carbon.identity.claim.metadata.mgt.dto.ClaimPropertyDTO;
@@ -37,11 +38,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Utility class containing various claim metadata implementation related functionality.
  */
 public class ClaimMetadataUtils {
+
+    public static final String CORRELATION_ID_MDC = "Correlation-ID";
 
     private ClaimMetadataUtils() {
     }
@@ -315,5 +319,31 @@ public class ClaimMetadataUtils {
         claimMapping.getClaim().setDialectURI(externalClaim.getClaimDialectURI());
         claimMapping.getClaim().setClaimUri(externalClaim.getClaimURI());
         return claimMapping;
+    }
+
+    /**
+     * Get correlation id of current thread.
+     *
+     * @return correlation-id.
+     */
+    public static String getCorrelation() {
+
+        String ref;
+        if (isCorrelationIDPresent()) {
+            ref = MDC.get(CORRELATION_ID_MDC).toString();
+        } else {
+            ref = UUID.randomUUID().toString();
+        }
+        return ref;
+    }
+
+    /**
+     * Check whether correlation id present in the log MDC.
+     *
+     * @return True if correlation id present in the log MDC.
+     */
+    public static boolean isCorrelationIDPresent() {
+
+        return MDC.get(CORRELATION_ID_MDC) != null;
     }
 }
